@@ -1,43 +1,85 @@
-from tkinter import ttk
+from tkinter import Canvas
 
 class Healthbar:
     
 
-    def __init__(self, root, health_cur, health_max, health_min):
 
-        if health_max <= 0:
-            raise ValueError("health_max = " + str(health_max))
+    def __init__(self, root, health_min, health_max, health_cur, health_limit_min, health_limit_max):
 
-        _cur = health_cur
-        _max = health_max
-        _min = health_min
+        # Assign health values guaranteeing the following properties:
+        #   - self.health_min is always negative
+        #   - self.health_max is always positive
+        #   - self.health_cur is always in [self.health_min, self.health_max]
 
-        if _min > 0:
-            _min = -_min
+        self.health_min = min(health_min, -health_min)
+        self.health_max = max(health_max, -health_max)
+        self.health_cur = min(max(health_cur, self.health_min), self.health_max)
 
-        if _cur > _max:
-            _cur = _max
+        # Assign health limits.
+        # Health limits are used for scaling and are adjusted to fit the health values.
 
-        if _cur < _min:
-            _cur = _min
+        self.health_limit_min = min(self.health_min, health_limit_min)
+        self.health_limit_max = max(self.health_max, health_limit_max)
 
-        self.positive = ttk.Progressbar(root, maximum = _max, value=_cur if _cur > 0 else 0)
-        self.negative = ttk.Progressbar(root, maximum = -_min, value=-_cur if _cur < 0 else 0)
+        # Configure health bar dimensions here!
 
+        self.width = 200
+        self.height = 20
+        self.step = self.width / (self.health_limit_max - self.health_limit_min)
+        
+        # Create a canvas for the health bar.
 
-#        if _cur > 0:
-#            self.positive.step(_cur)
-#        else:
-#            self.negative.step(-_cur)
+        self.background = Canvas(root, width=self.width, height=self.height)
 
+    
 
     def forget_and_destroy(self):
-        self.positive.grid_forget()
-        self.positive.destroy()
-        self.negative.grid_forget()
-        self.negative.destroy()
+        self.background.grid_forget()
+        self.background.destroy()
+
 
 
     def grid(self, column, row):
-        self.negative.grid(column=column, row=row)
-        self.positive.grid(column=column+1, row=row, columnspan=2)
+        self.background.grid(column=column, row=row, columnspan=2)
+        self.update()
+
+
+
+    def new_health_limit(self, health_limit_min, health_limit_max):
+        ''' Assign health limits for scaling purposes.
+            Health limits will always be readjusted to guarantee {self.health_min, self.health_max} are inside of [health__limit_min, health_limit_max].'''
+
+        self.health_limit_min = min(self.health_min, health_limit_min)
+        self.health_limit_max = max(self.health_max, health_limit_max)
+        self.step = self.width / (self.health_limit_max - self.health_limit_min)
+
+    
+
+    def update(self):
+        ''' Update the health bar.
+            Updating causes health bar rectangles to be deleted.
+            If self.health_cur is not 0, they will be drawn again to correctly represent the current health value.'''
+
+        _cur = self.step * (self.health_cur - self.health_limit_min)
+        _zero = self.step * -self.health_limit_min
+        _min = self.step * (self.health_min - self.health_limit_min)
+        _max = self.step * (self.health_max - self.health_limit_min)
+
+        self.background.delete('all')
+
+        if self.health_cur < 0:
+            self.background.create_rectangle(_cur, self.height * 0.5 - 1, _max, self.height * 0.5 + 1, outline='magenta4', fill='magenta4')
+            self.background.create_rectangle(_min, 0, _cur, self.height, fill='grey10')
+            self.background.create_rectangle(_cur, 0, _zero, self.height, fill='magenta4')
+        
+        elif self.health_cur > 0:
+            self.background.create_rectangle(_cur, self.height * 0.5 - 1, _max, self.height * 0.5 + 1, outline='black', fill='white')
+            self.background.create_rectangle(_min, 0, _zero, self.height, fill='grey10')
+            self.background.create_rectangle(_zero, 0, _cur, self.height, fill='royal blue')
+        
+        else:
+            self.background.create_rectangle(_cur, self.height * 0.5 - 1, _max, self.height * 0.5 + 1, outline='black', fill='black')
+            self.background.create_rectangle(_min, 0, _zero, self.height, fill='grey10')
+
+
+        
