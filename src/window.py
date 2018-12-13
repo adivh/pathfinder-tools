@@ -29,31 +29,11 @@ class Window:
         self.health_limit_max = 0
 
 
-    
-    def start(self):
-        self.root.mainloop()
-    
-    
-    def create_new_unit_window(self):
-
-        unit_window = Toplevel(self.root)
-        unit_window.title("New Unit")
-
-        health_min = ttk.Entry(unit_window)
-        health_min.pack()
-
-        health_max = ttk.Entry(unit_window)
-        health_max.pack()
-
-        health_cur = ttk.Entry(unit_window)
-        health_cur.pack()
-
-        create_unit = ttk.Button(unit_window, command=lambda: self.add_unit(health_min.get(), health_max.get(), health_cur.get(), unit_window), text="Create Unit")
-        create_unit.pack()
-
-
 
     def add_unit(self, health_min, health_max, health_cur, window=None):
+        ''' Add a Unit_Widget to the window.
+            The window parameter is used when this method is called in conjunction with a unit creation window.
+            If a window is passed and a unit_widget is successfully created, the window will be destroyed. '''
 
         try:
             _min = int(health_min)
@@ -80,16 +60,40 @@ class Window:
         # Create a new unit_widget.
 
         self.units.append(Unit_Widget(self.root, _min, _max, _cur, self.health_limit_min, self.health_limit_max))
-        self.units[-1].grid(0, len(self.units))
+        self.units[-1].grid(0, len(self.units), columnspan=2)
 
         # Destroy window after successfully adding the unit_widget.
 
         if window is not None:
             window.destroy()
+    
+    
+
+    def create_new_unit_window(self):
+        ''' This method creates a unit creation window.
+            The method is designed for interal use.
+            External method calls are not recommended. '''
+
+        unit_window = Toplevel(self.root)
+        unit_window.title("New Unit")
+
+        health_min = ttk.Entry(unit_window)
+        health_min.pack()
+
+        health_max = ttk.Entry(unit_window)
+        health_max.pack()
+
+        health_cur = ttk.Entry(unit_window)
+        health_cur.pack()
+
+        create_unit = ttk.Button(unit_window, command=lambda: self.add_unit(health_min.get(), health_max.get(), health_cur.get(), unit_window), text="Create Unit")
+        create_unit.pack()
 
 
 
     def remove_unit(self):
+        ''' Remove the last unit in a group. '''
+
         if len(self.units) == 0:
             return
 
@@ -109,3 +113,12 @@ class Window:
             for unit in self.units:
                 unit.new_health_limit(self.health_limit_min, self.health_limit_max)
                 unit.update()
+
+
+    
+    def start(self):
+        ''' Start the window.
+            This method calls tkinter.Tk.mainloop().
+            Calling this method blocks until the window is closed. '''
+
+        self.root.mainloop()

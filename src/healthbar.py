@@ -34,20 +34,24 @@ class Healthbar:
     
 
     def forget_and_destroy(self):
+        ''' Hide the healthbar and destroy it. '''
+        
         self.background.grid_forget()
         self.background.destroy()
 
 
 
-    def grid(self, column, row):
-        self.background.grid(column=column, row=row, columnspan=2)
+    def grid(self, column, row, columnspan=1):
+        ''' Place the healthbar and draw it. '''
+
+        self.background.grid(column=column, row=row, columnspan=columnspan)
         self.update()
 
 
 
     def new_health_limit(self, health_limit_min, health_limit_max):
         ''' Assign health limits for scaling purposes.
-            Health limits will always be readjusted to guarantee {self.health_min, self.health_max} are inside of [health__limit_min, health_limit_max].'''
+            Health limits will always be readjusted to guarantee {self.health_min, self.health_max} are inside of [health__limit_min, health_limit_max]. '''
 
         self.health_limit_min = min(self.health_min, health_limit_min)
         self.health_limit_max = max(self.health_max, health_limit_max)
@@ -58,7 +62,7 @@ class Healthbar:
     def update(self):
         ''' Update the health bar.
             Updating causes health bar rectangles to be deleted.
-            If self.health_cur is not 0, they will be drawn again to correctly represent the current health value.'''
+            If self.health_cur is not 0, they will be drawn again to correctly represent the current health value. '''
 
         _cur = self.step * (self.health_cur - self.health_limit_min)
         _zero = self.step * -self.health_limit_min
