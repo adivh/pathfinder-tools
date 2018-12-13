@@ -5,8 +5,9 @@ from healthbar import Healthbar
 class Unit_Widget:
 
 
-    def __init__(self, root, health_min, health_max, health_cur, health_limit_min, health_limit_max):
-        self.healthbar = Healthbar(root, health_min, health_max, health_cur, health_limit_min, health_limit_max)
+    def __init__(self, root, unit, health_limit_min, health_limit_max):
+        self.unit = unit
+        self.healthbar = Healthbar(root, self, health_limit_min, health_limit_max)
 
 
 

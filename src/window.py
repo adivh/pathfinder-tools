@@ -4,6 +4,7 @@ from tkinter import Tk
 from tkinter import Toplevel
 from tkinter import ttk
 
+from unit import Unit
 from unit_widget import Unit_Widget
 
 
@@ -18,13 +19,13 @@ class Window:
         self.root.geometry("400x200")
         self.draw_health_decor = False
 
-        self.add_units = ttk.Button(self.root, command=self.create_new_unit_window, text="Add Member")
-        self.add_units.grid(column=0, row=0)
+        self.add_unit_widgets = ttk.Button(self.root, command=self.create_new_unit_window, text="Add Member")
+        self.add_unit_widgets.grid(column=0, row=0)
 
-        self.remove_units = ttk.Button(self.root, command=self.remove_unit, text="Del Member")
-        self.remove_units.grid(column=1, row=0)
+        self.remove_unit_widgets = ttk.Button(self.root, command=self.remove_unit, text="Del Member")
+        self.remove_unit_widgets.grid(column=1, row=0)
 
-        self.units = []
+        self.unit_widgets = []
         self.health_limit_min = 0
         self.health_limit_max = 0
 
@@ -53,14 +54,14 @@ class Window:
         self.health_limit_min = min(self.health_limit_min, _min)
         self.health_limit_max = max(self.health_limit_max, _max)
 
-        for unit in self.units:
+        for unit in self.unit_widgets:
             unit.new_health_limit(self.health_limit_min, self.health_limit_max)
             unit.update()
 
         # Create a new unit_widget.
 
-        self.units.append(Unit_Widget(self.root, _min, _max, _cur, self.health_limit_min, self.health_limit_max))
-        self.units[-1].grid(0, len(self.units), columnspan=2)
+        self.unit_widgets.append(Unit_Widget(self.root, Unit(_min, _max, _cur), self.health_limit_min, self.health_limit_max))
+        self.unit_widgets[-1].grid(0, len(self.unit_widgets), columnspan=2)
 
         # Destroy window after successfully adding the unit_widget.
 
@@ -94,25 +95,25 @@ class Window:
     def remove_unit(self):
         ''' Remove the last unit in a group. '''
 
-        if len(self.units) == 0:
+        if len(self.unit_widgets) == 0:
             return
 
         _res = messagebox.askyesno(title="Remove Unit", message="Are you sure?")
 
         if _res:
-            self.units[-1].forget_and_destroy()
-            del self.units[-1]
+            self.unit_widgets[-1].forget_and_destroy()
+            del self.unit_widgets[-1]
 
             self.health_limit_min = 0
             self.health_limit_max = 0
 
-            for unit in self.units:
-                self.health_limit_min = min(self.health_limit_min, unit.healthbar.health_min)
-                self.health_limit_max = max(self.health_limit_max, unit.healthbar.health_max)
+            for unit_widget in self.unit_widgets:
+                self.health_limit_min = min(self.health_limit_min, unit_widget.unit.health_min)
+                self.health_limit_max = max(self.health_limit_max, unit_widget.unit.health_max)
 
-            for unit in self.units:
-                unit.new_health_limit(self.health_limit_min, self.health_limit_max)
-                unit.update()
+            for unit_widget in self.unit_widgets:
+                unit_widget.new_health_limit(self.health_limit_min, self.health_limit_max)
+                unit_widget.update()
 
 
     

@@ -11,3 +11,6 @@ test( 2,  2,  1)
 test( 2, -2,  1)
 test( 2,  2,  3)
 test( 2,  2, -3)
+
+dic = {'test': 0, 'dada': 1}
+print(dic[0])
