@@ -1,13 +1,19 @@
 from healthbar import Healthbar
+from unit_identifier import Unit_Identifier
 
 
 
 class Unit_Widget:
 
 
-    def __init__(self, root, unit, health_limit_min, health_limit_max):
+    height = 2
+
+
+    def __init__(self, parent, unit, health_limit_min, health_limit_max):
+        self.parent = parent
         self.unit = unit
-        self.healthbar = Healthbar(root, self, health_limit_min, health_limit_max)
+        self.unit_identifier = Unit_Identifier(self)
+        self.healthbar = Healthbar(self, health_limit_min, health_limit_max)
 
 
 
@@ -15,6 +21,7 @@ class Unit_Widget:
         ''' Calling this method will hide and destroy all subwidgets.
             This effectively destroys the Unit_Widget. '''
 
+        self.unit_identifier.forget_and_destroy()
         self.healthbar.forget_and_destroy()
 
 
@@ -24,7 +31,8 @@ class Unit_Widget:
             The Unit_Widget will never exceed the dimensions specified in the method parameters.
             Try calling self.update() if the Unit_Widget is not showing properly. '''
 
-        self.healthbar.grid(column, row, columnspan=columnspan)
+        self.unit_identifier.grid(column, row)
+        self.healthbar.grid(column, row + 1, columnspan=columnspan)
 
 
 
@@ -44,4 +52,5 @@ class Unit_Widget:
     def update(self):
         ''' Update the entire Unit_Widget. '''
 
+        self.unit_identifier.update()
         self.healthbar.update()

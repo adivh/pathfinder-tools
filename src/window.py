@@ -31,7 +31,7 @@ class Window:
 
 
 
-    def add_unit(self, health_min, health_max, health_cur, window=None):
+    def add_unit(self, name, classes, levels, health_min, health_max, health_cur, window=None):
         ''' Add a Unit_Widget to the window.
             The window parameter is used when this method is called in conjunction with a unit creation window.
             If a window is passed and a unit_widget is successfully created, the window will be destroyed. '''
@@ -60,8 +60,9 @@ class Window:
 
         # Create a new unit_widget.
 
-        self.unit_widgets.append(Unit_Widget(self.root, Unit(_min, _max, _cur), self.health_limit_min, self.health_limit_max))
-        self.unit_widgets[-1].grid(0, len(self.unit_widgets), columnspan=2)
+        _unit = Unit(name, classes, levels, _min, _max, _cur)
+        self.unit_widgets.append(Unit_Widget(self.root, _unit, self.health_limit_min, self.health_limit_max))
+        self.unit_widgets[-1].grid(0, Unit_Widget.height * len(self.unit_widgets), columnspan=2)
 
         # Destroy window after successfully adding the unit_widget.
 
@@ -87,7 +88,7 @@ class Window:
         health_cur = ttk.Entry(unit_window)
         health_cur.pack()
 
-        create_unit = ttk.Button(unit_window, command=lambda: self.add_unit(health_min.get(), health_max.get(), health_cur.get(), unit_window), text="Create Unit")
+        create_unit = ttk.Button(unit_window, command=lambda: self.add_unit('Horst', ['Perversling'], [1], health_min.get(), health_max.get(), health_cur.get(), unit_window), text="Create Unit")
         create_unit.pack()
 
 

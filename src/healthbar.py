@@ -4,7 +4,7 @@ class Healthbar:
     
 
 
-    def __init__(self, root, parent, health_limit_min, health_limit_max):
+    def __init__(self, parent, health_limit_min, health_limit_max):
 
         self.parent = parent
 
@@ -22,7 +22,7 @@ class Healthbar:
         
         # Create a canvas for the health bar.
 
-        self.background = Canvas(root, width=self.width, height=self.height)
+        self.background = Canvas(self.parent.parent, width=self.width, height=self.height)
 
     
 
