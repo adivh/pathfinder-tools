@@ -1,0 +1,19 @@
+name: Günther
+
+classes:
+  - Magier: 4
+  - Neger: 2
+
+stats:
+  - health_min: -6
+  - health_max: 22
+  - health_cur: 9
+  - armor: 14
+  - touch: 13
+  - flat_footed: 11
+
+skills:
+  - disguise: 3
+  - sense_motive: -4
+  - stealth: 5
+  - perception: 0

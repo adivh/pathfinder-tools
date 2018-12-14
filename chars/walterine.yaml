@@ -1,0 +1,19 @@
+name: Walterine
+
+classes:
+  - Druide: 3
+  - Hippi: 4
+
+stats:
+  - health_min: -7
+  - health_max: 19
+  - health_cur: -3
+  - armor: 10
+  - touch: 9
+  - flat_footed: 10
+
+skills:
+  - disguise: -6
+  - sense_motive: -13
+  - stealth: -4
+  - perception: 20

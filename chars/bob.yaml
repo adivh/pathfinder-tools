@@ -1,0 +1,19 @@
+name: Bob
+
+classes:
+  - Paladin: 5
+  - Kriegsverbrecher: 2
+
+stats:
+  - health_min: -5
+  - health_max: 18
+  - health_cur: 14
+  - armor: 18
+  - touch: 10
+  - flat_footed: 18
+
+skills:
+  - disguise: 1
+  - sense_motive: 3
+  - stealth: 3
+  - perception: 7

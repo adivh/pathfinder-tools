@@ -1,0 +1,19 @@
+name: Haralda
+
+classes:
+  - Schurke: 3
+  - Teppichverkäufer: 3
+
+stats:
+  - health_min: -6
+  - health_max: 15
+  - health_cur: 15
+  - armor: 16
+  - touch: 14
+  - flat_footed: 12
+
+skills:
+  - disguise: 9
+  - sense_motive: 9
+  - stealth: 9
+  - perception: 9
