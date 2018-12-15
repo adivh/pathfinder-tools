@@ -1,0 +1,9 @@
+# pycache #
+###########
+
+src/__pycache__
+
+# file types #
+##############
+
+*.pyc
