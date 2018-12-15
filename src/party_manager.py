@@ -11,7 +11,7 @@ from unit_widget import Unit_Widget
 
 
 
-class Window:
+class Party_Manager:
         
 
 
@@ -172,3 +172,19 @@ class Window:
             Calling this method blocks until the window is closed. '''
 
         self.root.mainloop()
+
+
+
+if __name__ == '__main__':
+    import sys
+    import os
+    
+    app = Party_Manager()
+
+    if len(sys.argv) > 1 and sys.argv[1] is not '' and os.path.isdir(sys.argv[1]):
+        for filename in os.listdir(sys.argv[1]):
+            if filename.endswith('.yaml') or filename.endswith('.yml'):
+                unit = Charactersheet_Loader.load_unit(sys.argv[1] + filename)
+                app.add_unit(unit.name, unit.classes, unit.levels, unit.health_min, unit.health_max, unit.health_cur)
+
+    app.start()
