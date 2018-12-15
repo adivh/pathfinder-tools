@@ -1,5 +1,5 @@
-from re import match
 from tkinter import filedialog
+from tkinter import IntVar
 from tkinter import messagebox
 from tkinter import Tk
 from tkinter import Toplevel
@@ -24,10 +24,11 @@ class Window:
         self.add_unit_widgets = ttk.Button(self.root, command=self.create_file_dialog, text="Add Member")
         self.add_unit_widgets.grid(sticky='e', column=0, row=0)
 
-        self.remove_unit_widgets = ttk.Button(self.root, command=self.remove_unit, text="Del Member")
+        self.remove_unit_widgets = ttk.Button(self.root, command=self.create_remove_unit_window, text="Del Member")
         self.remove_unit_widgets.grid(sticky='w', column=1, row=0)
 
         self.unit_widgets = []
+        self.marked_for_delete = []
         self.health_limit_min = 0
         self.health_limit_max = 0
 
@@ -65,6 +66,8 @@ class Window:
         _unit = Unit(name, classes, levels, _min, _max, _cur)
         self.unit_widgets.append(Unit_Widget(self.root, _unit, self.health_limit_min, self.health_limit_max))
         self.unit_widgets[-1].grid(0, Unit_Widget.height * len(self.unit_widgets), columnspan=2)
+
+        self.marked_for_delete.append(IntVar())
 
         # Destroy window after successfully adding the unit_widget.
 
@@ -109,28 +112,57 @@ class Window:
 
 
 
-    def remove_unit(self):
-        ''' Remove the last unit in a group. '''
+    def create_remove_unit_window(self):
+        ''''''
+
+        if len(self.unit_widgets) == 0:
+            return
+        
+        selection_window = Toplevel(self.root)
+        selection_window.title('Remove units')
+
+        checkbuttons = []
+
+        for i in range(0, len(self.unit_widgets)):
+            checkbuttons.append(ttk.Checkbutton(selection_window, variable=self.marked_for_delete[i], text=self.unit_widgets[i].unit.name))
+            checkbuttons[i].grid(sticky='w', column=0, row=i)
+
+        remove_button = ttk.Button(selection_window, command=lambda: self.remove_units_by_checkbox(selection_window), text='Remove units')
+        remove_button.grid(column=1, row=len(checkbuttons))
+
+
+
+    def remove_units_by_checkbox(self, window=None):
+        ''' Remove all checked units. For internal use only. '''
 
         if len(self.unit_widgets) == 0:
             return
 
-        _res = messagebox.askyesno(title="Remove Unit", message="Are you sure?")
+        index = 0
+        while index < len(self.unit_widgets):
+            if self.marked_for_delete[index].get():
+                self.unit_widgets[index].forget_and_destroy()
+                del self.unit_widgets[index]
+                del self.marked_for_delete[index]
+            else:
+                index = index + 1
+                
+                
+        self.health_limit_min = 0
+        self.health_limit_max = 0
 
-        if _res:
-            self.unit_widgets[-1].forget_and_destroy()
-            del self.unit_widgets[-1]
+        for unit_widget in self.unit_widgets:
+            self.health_limit_min = min(self.health_limit_min, unit_widget.unit.health_min)
+            self.health_limit_max = max(self.health_limit_max, unit_widget.unit.health_max)
 
-            self.health_limit_min = 0
-            self.health_limit_max = 0
+        for i in range(0, len(self.unit_widgets)):
+            self.unit_widgets[i].new_health_limit(self.health_limit_min, self.health_limit_max)
+            self.unit_widgets[i].forget()
+            self.unit_widgets[i].grid(0, Unit_Widget.height * i + 1, columnspan=2)
+            self.unit_widgets[i].update()
 
-            for unit_widget in self.unit_widgets:
-                self.health_limit_min = min(self.health_limit_min, unit_widget.unit.health_min)
-                self.health_limit_max = max(self.health_limit_max, unit_widget.unit.health_max)
-
-            for unit_widget in self.unit_widgets:
-                unit_widget.new_health_limit(self.health_limit_min, self.health_limit_max)
-                unit_widget.update()
+        if window is not None:
+            window.destroy()
 
 
     

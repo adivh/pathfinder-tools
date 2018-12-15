@@ -4,7 +4,6 @@ A set of tools for DMing Pathfinder sessions and similar board games
 ## Planning
 
 NEXT:
-  - Delete specific unit from the interface
   - Enable unit export
 
 TODO:

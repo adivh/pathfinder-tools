@@ -26,6 +26,12 @@ class Healthbar:
 
     
 
+    def forget(self):
+        ''' Hide the healthbar. '''
+        self.background.grid_forget()
+    
+    
+    
     def forget_and_destroy(self):
         ''' Hide the healthbar and destroy it. '''
         

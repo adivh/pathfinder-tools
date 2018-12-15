@@ -14,6 +14,13 @@ class Unit_Identifier:
 
 
     
+    def forget(self):
+        ''' Forget the Unit_Identifier. '''
+
+        self.label.grid_forget()
+    
+    
+    
     def forget_and_destroy(self):
         ''' Hide the Unit_Identifier and destroy it. '''
 

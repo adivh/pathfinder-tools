@@ -21,6 +21,15 @@ class Unit_Widget:
 
 
 
+    def forget(self):
+        ''' Forget all subwidgets. '''
+
+        self.label_name.grid_forget()
+        self.unit_identifier.forget()
+        self.healthbar.forget()
+    
+    
+    
     def forget_and_destroy(self):
         ''' Calling this method will hide and destroy all subwidgets.
             This effectively destroys the Unit_Widget. '''
