@@ -22,10 +22,10 @@ class Unit_Identifier:
 
 
     
-    def grid(self, column, row):
+    def grid(self, column, row, columnspan=1):
         ''' Place the Unit_Identifier. '''
 
-        self.label.grid(column=column, row=row)
+        self.label.grid(sticky='w', column=column, row=row, columnspan=columnspan)
 
 
 

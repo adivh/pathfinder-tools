@@ -1,9 +1,11 @@
 from re import match
+from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import Tk
 from tkinter import Toplevel
 from tkinter import ttk
 
+from charactersheet_loader import Charactersheet_Loader
 from unit import Unit
 from unit_widget import Unit_Widget
 
@@ -16,14 +18,14 @@ class Window:
     def __init__(self):
         self.root = Tk()
         self.root.title("Party Manager")
-        self.root.geometry("400x200")
+        #self.root.geometry("400x200")
         self.draw_health_decor = False
 
-        self.add_unit_widgets = ttk.Button(self.root, command=self.create_new_unit_window, text="Add Member")
-        self.add_unit_widgets.grid(column=0, row=0)
+        self.add_unit_widgets = ttk.Button(self.root, command=self.create_file_dialog, text="Add Member")
+        self.add_unit_widgets.grid(sticky='e', column=0, row=0)
 
         self.remove_unit_widgets = ttk.Button(self.root, command=self.remove_unit, text="Del Member")
-        self.remove_unit_widgets.grid(column=1, row=0)
+        self.remove_unit_widgets.grid(sticky='w', column=1, row=0)
 
         self.unit_widgets = []
         self.health_limit_min = 0
@@ -68,6 +70,20 @@ class Window:
 
         if window is not None:
             window.destroy()
+
+
+
+    def create_file_dialog(self):
+        ''' Create a file dialog to load charactersheets. 
+            This will accept all files but ignore files not ending in .yaml or .yml. '''
+        
+        _path = filedialog.askopenfilenames()
+        
+        for path in _path:
+            if path.endswith('.yaml') or path.endswith('.yml'):
+                unit = Charactersheet_Loader.load_unit(path)
+                self.add_unit(unit.name, unit.classes, unit.levels, unit.health_min, unit.health_max, unit.health_cur)
+
     
     
 
