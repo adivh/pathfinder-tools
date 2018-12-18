@@ -182,9 +182,13 @@ if __name__ == '__main__':
     app = Party_Manager()
 
     if len(sys.argv) > 1 and sys.argv[1] is not '' and os.path.isdir(sys.argv[1]):
-        for filename in os.listdir(sys.argv[1]):
+        path = sys.argv[1]
+        if not path.endswith('/'):
+            path = path + '/'
+
+        for filename in os.listdir(path):
             if filename.endswith('.yaml') or filename.endswith('.yml'):
-                unit = Charactersheet_Loader.load_unit(sys.argv[1] + filename)
+                unit = Charactersheet_Loader.load_unit(path + filename)
                 app.add_unit(unit.name, unit.classes, unit.levels, unit.health_min, unit.health_max, unit.health_cur)
 
     app.start()
